@@ -5,31 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Chatbot"
         mc:Ignorable="d"
-        Title="CyberSecurityAI" Height="700" Width="900"
-        WindowStartupLocation="CenterScreen" 
-        Background="#FF2D2D30">
-    <!-- CHANGED: Main window background to dark gray -->
+        Title="CyberSecurity Awareness Bot" Height="700" Width="900"
+        WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
-
-        <!-- Style for the Chatbot's messages (Dark Theme) -->
+        <!-- Styles for Chat Bubbles -->
         <Style x:Key="BotMessageStyle" TargetType="ListBoxItem">
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBoxItem">
-                        <!-- CHANGED: Bot bubble background to a medium dark gray -->
-                        <Border Background="#FF3E3E42" CornerRadius="10,10,10,0" Padding="10" Margin="5" MaxWidth="500">
-                            <!-- CHANGED: Bot bubble text to white -->
-                            <TextBlock Text="{Binding}" TextWrapping="Wrap" Foreground="White"/>
+                        <Border Background="#FFE8E8E8" CornerRadius="10,10,10,0" Padding="10" Margin="5" MaxWidth="500">
+                            <TextBlock Text="{Binding}" TextWrapping="Wrap" Foreground="Black"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!-- Style for the User's messages (Blue bubble, already works well) -->
         <Style x:Key="UserMessageStyle" TargetType="ListBoxItem">
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="Template">
@@ -45,67 +37,96 @@
     </Window.Resources>
 
     <Grid>
-        <TabControl x:Name="MainTabControl" Background="Transparent">
-            <!-- ===== WELCOME TAB (DARK) ===== -->
-            <TabItem Header="Welcome">
-                <Grid Background="Transparent">
-                    <!-- CHANGED: Transparent background -->
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="CyberSectiSTU" FontFamily="Consolas" FontSize="48" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20" Foreground="White"/>
-                        <!-- CHANGED: Text to white -->
-                        <TextBlock Text="Welcome to CyberSecurityAI!" FontSize="24" HorizontalAlignment="Center" Margin="0,0,0,10" Foreground="White"/>
-                        <!-- CHANGED: Text to white -->
-                        <TextBlock Text="This application will help you learn about cybersecurity topics." FontSize="16" HorizontalAlignment="Center" Foreground="White"/>
-                        <!-- CHANGED: Text to white -->
-                        <TextBlock Text="Click Continue to get started." FontSize="16" HorizontalAlignment="Center" Margin="0,0,0,20" Foreground="White"/>
-                        <!-- CHANGED: Text to white -->
-                        <Button x:Name="ContinueButton" Content="Continue" Width="120" Height="40" Click="ContinueButton_Click"/>
+        <!-- ===== LOGIN VIEW ===== -->
+        <!-- This view is visible at the start. -->
+        <Grid x:Name="LoginView" Visibility="Visible" Background="#FF00C1B0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="Welcome to the Cybersecurity Awareness Bot" FontSize="22" HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,20"/>
+                <Border Background="WhiteSmoke" CornerRadius="10" Padding="40" Width="350">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="2" Color="Black" Opacity="0.3" BlurRadius="10"/>
+                    </Border.Effect>
+                    <StackPanel>
+                        <Image Source="/chatbot_logo.png" Height="128" Margin="0,0,0,10"/>
+                        <TextBlock Text="CHAT BOT" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="#FF333333"/>
+                        <TextBlock Text="Enter your name to begin" HorizontalAlignment="Center" Margin="0,20,0,5" Foreground="Gray"/>
+                        <TextBox x:Name="NameTextBox" Padding="8" Margin="0,0,0,15" FontSize="14"/>
+                        <Button x:Name="LoginButton" Content="Login" Padding="10" FontSize="16" Click="LoginButton_Click"/>
                     </StackPanel>
-                </Grid>
-            </TabItem>
+                </Border>
+            </StackPanel>
+        </Grid>
 
-            <!-- ===== CHAT TAB (DARK) ===== -->
-            <TabItem Header="Chat">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="250"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <ScrollViewer x:Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto" Margin="10">
-                            <ListBox x:Name="ChatHistoryListBox" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch"/>
-                            <!-- CHANGED: Background to transparent -->
-                        </ScrollViewer>
-                        <Grid Grid.Row="1" Margin="10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <!-- CHANGED: TextBox style for dark mode -->
-                            <TextBox x:Name="UserInputTextBox" Padding="10" VerticalContentAlignment="Center" KeyDown="UserInputTextBox_KeyDown" 
-                                     Background="#FF3E3E42" Foreground="White" BorderBrush="#FF555555" BorderThickness="1"/>
-                            <Button x:Name="SendButton" Content="Send" Grid.Column="1" Margin="10,0,0,0" Width="80" Click="SendButton_Click"/>
+        <!-- ===== MAIN CHAT VIEW (with Tabs) ===== -->
+        <!-- This view is hidden at the start. -->
+        <Grid x:Name="MainChatView" Visibility="Collapsed" Background="#FF2D2D30">
+            <TabControl x:Name="MainTabControl" Background="Transparent">
+                <!-- CHAT TAB -->
+                <TabItem Header="Chat">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="250"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <ScrollViewer x:Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto" Margin="10">
+                                <ListBox x:Name="ChatHistoryListBox" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch"/>
+                            </ScrollViewer>
+                            <Grid Grid.Row="1" Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="UserInputTextBox" Padding="10" VerticalContentAlignment="Center" KeyDown="UserInputTextBox_KeyDown" Background="#FF3E3E42" Foreground="White" BorderBrush="#FF555555" BorderThickness="1"/>
+                                <Button x:Name="SendButton" Content="Send" Grid.Column="1" Margin="10,0,0,0" Width="80" Click="SendButton_Click"/>
+                            </Grid>
                         </Grid>
+                        <Border Grid.Column="1" Background="#FF1E1E1E" Margin="0,10,10,10" CornerRadius="5">
+                            <StackPanel Margin="10">
+                                <TextBlock Text="Cybersecurity Tasks" FontSize="16" FontWeight="Bold" Foreground="White" Margin="0,0,0,10" TextAlignment="Center"/>
+                                <ListView x:Name="TasksListViewInChat" ItemsSource="{Binding ElementName=TasksListView, Path=ItemsSource}" Background="Transparent" BorderThickness="0">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <DockPanel Margin="5">
+                                                <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="5,0,0,0">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="White"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                                                    <Setter Property="TextDecorations" Value="Strikethrough"/>
+                                                                    <Setter Property="Foreground" Value="Gray"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style></TextBlock>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                        </Border>
                     </Grid>
-                    <!-- CHANGED: Side panel background to very dark gray -->
-                    <Border Grid.Column="1" Background="#FF1E1E1E" Margin="0,10,10,10" CornerRadius="5">
-                        <StackPanel Margin="10">
-                            <TextBlock Text="Cybersecurity Tasks" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" TextAlignment="Center" Foreground="White"/>
-                            <!-- CHANGED: Text to white -->
-                            <ListView x:Name="TasksListViewInChat" ItemsSource="{Binding ElementName=TasksListView, Path=ItemsSource}" Background="Transparent" BorderThickness="0">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <DockPanel Margin="5">
-                                            <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
-                                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="5,0,0,0">
+                </TabItem>
+
+                <!-- TASKS TAB -->
+                <TabItem Header="Tasks">
+                    <Grid Margin="10">
+                        <ListView x:Name="TasksListView" Background="#FF1E1E1E" BorderThickness="1" BorderBrush="#FF555555" Foreground="White">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel Margin="5" Width="Auto">
+                                        <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                                        <StackPanel Margin="10,0,0,0">
+                                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontWeight="SemiBold" FontSize="14">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
                                                         <Setter Property="Foreground" Value="White"/>
-                                                        <!-- CHANGED: Default task text to white -->
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsCompleted}" Value="True">
                                                                 <Setter Property="TextDecorations" Value="Strikethrough"/>
@@ -113,68 +134,31 @@
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
-                                        </DockPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </StackPanel>
-                    </Border>
-                </Grid>
-            </TabItem>
+                                                </TextBlock.Style></TextBlock>
+                                            <TextBlock Text="{Binding ReminderDate, StringFormat='Reminder: {0:yyyy-MM-dd}'}" Foreground="LightCyan" FontStyle="Italic"/>
+                                        </StackPanel>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </TabItem>
 
-            <!-- ===== TASKS TAB (DARK) ===== -->
-            <TabItem Header="Tasks">
-                <Grid Margin="10">
-                    <ListView x:Name="TasksListView" Background="#FF1E1E1E" BorderThickness="1" BorderBrush="#FF555555" Foreground="White">
-                        <!-- CHANGED: Background, Border, and Text -->
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <DockPanel Margin="5" Width="Auto">
-                                    <CheckBox IsChecked="{Binding IsCompleted, Mode=TwoWay}" VerticalAlignment="Center" DockPanel.Dock="Left"/>
-                                    <StackPanel Margin="10,0,0,0">
-                                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontWeight="SemiBold" FontSize="14">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Foreground" Value="White"/>
-                                                    <!-- CHANGED: Default task text to white -->
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsCompleted}" Value="True">
-                                                            <Setter Property="TextDecorations" Value="Strikethrough"/>
-                                                            <Setter Property="Foreground" Value="Gray"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-                                        <TextBlock Text="{Binding ReminderDate, StringFormat='Reminder: {0:yyyy-MM-dd}'}" Foreground="LightCyan" FontStyle="Italic" Visibility="{Binding ReminderDate, Converter={StaticResource NullToVisibilityConverter}}"/>
-                                        <!-- CHANGED: Reminder text color for contrast -->
-                                    </StackPanel>
-                                </DockPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </Grid>
-            </TabItem>
+                <!-- ACTIVITY LOG TAB -->
+                <TabItem Header="Activity Log">
+                    <Grid Margin="10">
+                        <ListBox x:Name="ActivityLogListBox" Background="#FF1E1E1E" BorderThickness="1" BorderBrush="#FF555555" Foreground="White"/>
+                    </Grid>
+                </TabItem>
 
-            <!-- ===== ACTIVITY LOG TAB (DARK) ===== -->
-            <TabItem Header="Activity Log">
-                <Grid Margin="10">
-                    <ListBox x:Name="ActivityLogListBox" Background="#FF1E1E1E" BorderThickness="1" BorderBrush="#FF555555" Foreground="White"/>
-                    <!-- CHANGED: Background, Border, and Text -->
-                </Grid>
-            </TabItem>
-
-            <!-- ===== QUIZ TAB (DARK) ===== -->
-            <TabItem Header="Cybersecurity Quiz">
-                <Grid Margin="10">
-                    <TextBlock Text="The quiz is conducted through the main Chat interface.
-Please go to the 'Chat' tab and type 'start quiz' to begin." 
-                               HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" TextAlignment="Center" Foreground="White"/>
-                    <!-- CHANGED: Text to white -->
-                </Grid>
-            </TabItem>
-        </TabControl>
+                <!-- QUIZ TAB -->
+                <TabItem Header="Cybersecurity Quiz">
+                    <Grid Margin="10">
+                        <TextBlock Text="The quiz is conducted through the main Chat interface.
+Please go to the 'Chat' tab and type 'start quiz' to begin." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" TextAlignment="Center" Foreground="White"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
     </Grid>
 </Window>
