@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace voice_greeting
+namespace ChatBot
 {
     public static class SentimentAnalyzer
     {

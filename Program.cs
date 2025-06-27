@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Media;
-using Microsoft.VisualBasic;
+using ChatBot;
 
-namespace voice_greeting
+namespace chatbot
 {
     public class Program
     {
@@ -12,7 +12,7 @@ namespace voice_greeting
 
         public static void Main(string[] args)
         {
-
+            
             HandleWelcome();
 
             string userName = GetUserName();
@@ -73,7 +73,6 @@ namespace voice_greeting
                     break;
                 }
 
-                // Handle "remember" command
                 if (userInput.ToLower().StartsWith("remember"))
                 {
                     if (userInput.Length <= "remember".Length || userInput.Substring("remember".Length).Trim().Length == 0)
@@ -88,7 +87,6 @@ namespace voice_greeting
                     continue;
                 }
 
-                // Handle "what do you remember"
                 if (userInput.ToLower().Contains("what do you remember"))
                 {
                     string recall = memory.RecallFacts();
@@ -96,21 +94,18 @@ namespace voice_greeting
                     continue;
                 }
 
-                // Handle "how are you"
                 if (userInput.ToLower().Contains("how are you"))
                 {
                     Console.WriteLine("\nChatbot: I'm doing great, thanks for asking! How can I help you with cybersecurity today?\n");
                     continue;
                 }
 
-                // Handle "what is my name"
                 if (userInput.ToLower().Contains("what is my name"))
                 {
                     Console.WriteLine($"\nChatbot: Your name is {userName}! How can I assist you today?\n");
                     continue;
                 }
 
-                // Handle "what did i ask"
                 if (userInput.ToLower().Contains("what did i ask"))
                 {
                     if (string.IsNullOrEmpty(lastUserInput))
@@ -124,7 +119,6 @@ namespace voice_greeting
                     continue;
                 }
 
-                // If none of the above commands match, proceed to GetResponse
                 string response = handler.GetResponse(userInput, memory, userName, conversation);
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"\nChatbot: {response}\n");

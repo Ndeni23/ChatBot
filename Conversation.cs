@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace voice_greeting
+namespace ChatBot
 {
     public class Conversation
     {

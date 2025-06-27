@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace voice_greeting
+namespace ChatBot
 {
     public class ChatMemory
     {

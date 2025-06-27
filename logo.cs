@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace voice_greeting
+namespace ChatBot
 {
     public class Logo
     {

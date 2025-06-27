@@ -2,7 +2,7 @@
 using System.IO;
 using System.Media;
 
-namespace voice_greeting
+namespace chatbot
 {
     public class welcome_message
     {

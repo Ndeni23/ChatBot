@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualBasic;
+using ChatBot;
 
-namespace voice_greeting
+namespace chatbot
 {
     public class ResponseHandler
     {
@@ -76,7 +76,6 @@ namespace voice_greeting
         {
             input = input.ToLower().Trim();
 
-            // Check for cybersecurity keywords first
             foreach (var group in keywordGroups)
             {
                 foreach (var keyword in group.Value)
@@ -89,7 +88,6 @@ namespace voice_greeting
                 }
             }
 
-            // Simplified follow-up detection
             if (input.Contains("more") || input.Contains("continue") || input.Contains("what else") ||
                 input.Contains("go on") || input.Contains("details") || input.Contains("keep going") ||
                 input.Contains("tell me more"))
